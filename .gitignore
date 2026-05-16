@@ -17,9 +17,7 @@ dist/
 build/
 *.log
 
-# uv
-uv.lock
-.uv/
+
 
 # Database
 *.db
