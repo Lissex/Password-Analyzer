@@ -138,12 +138,6 @@ docker compose exec backend alembic upgrade head
 docker compose exec backend alembic revision --autogenerate -m "msg"
 docker compose exec backend alembic downgrade -1
 
-### Тесты
-
-Тесты пока не реализованы в проекте.
-
----
-
 ## 📡 API
 
 POST /api/v1/analyze
@@ -184,22 +178,10 @@ FastAPI, Python 3.12, PostgreSQL 16, SQLAlchemy async, Docker, Bootstrap 5.3, py
 
 ---
 
-## 🤝 Вклад
-
-Fork → Branch → Commit → Push → PR
-
----
-
-## 📄 Лицензия
-
-MIT
-
----
-
 ## 👨‍💻 Автор
 
 Your Name
-GitHub: [https://github.com/your-username](https://github.com/your-username)
+GitHub: [https://github.com/your-username](https://github.com/Lissex)
 
 ---
 
