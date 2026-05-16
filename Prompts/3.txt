@@ -1,0 +1,30 @@
+Implement infrastructure/database/ in backend/src/infrastructure/.
+
+1. connection.py:
+   - async SQLAlchemy engine via create_async_engine
+   - DATABASE_URL from pydantic-settings (Settings class reads from .env)
+   - async_sessionmaker with AsyncSession
+   - async get_db() dependency yielding session
+
+2. models.py — SQLAlchemy ORM model (NOT a domain entity):
+   - PasswordAnalysisModel(Base):
+       id: UUID primary key, default uuid4
+       analyzed_at: DateTime with timezone, server_default now()
+       entropy_bits: Float
+       pool_size: Integer
+       has_lowercase/uppercase/digits/symbols: Boolean
+       strength_label: String(50)
+       strength_color: String(20)
+
+3. infrastructure/repositories/postgres_analysis_repository.py:
+   - PostgresAnalysisRepository implements IAnalysisRepository
+   - Constructor takes AsyncSession
+   - save(): maps PasswordAnalysis entity -> PasswordAnalysisModel, session.add + commit
+   - get_recent(limit): query with order_by analyzed_at.desc(), limit,
+     maps ORM rows back to PasswordAnalysis entities
+   - Mapping is explicit — no shared state between ORM model and domain entity
+
+4. Configure Alembic:
+   - alembic init alembic (already scaffolded)
+   - alembic/env.py: import Base from models.py, use async engine (run_async_migrations pattern)
+   - Generate first migration: alembic revision --autogenerate -m "create password_analyses table"

@@ -1,0 +1,25 @@
+Implement the full domain layer in backend/src/domain/.
+Rules: zero imports from outside domain/, no SQLAlchemy, no Pydantic.
+
+Value objects (frozen dataclasses):
+- Entropy(bits: float): classmethod calculate(length: int, pool_size: int) -> Entropy
+- CharacterPool(has_lowercase, has_uppercase, has_digits, has_symbols: bool):
+    property size -> int, classmethod from_password(str) -> CharacterPool
+- CrackTime(seconds: float): property human_readable -> str
+    (instant / сек / мин / ч / дней / лет / тыс. лет / млн лет)
+
+Entity:
+- PasswordAnalysis(id: UUID, analyzed_at: datetime, entropy: Entropy,
+    pool: CharacterPool, strength_label: str, strength_color: str)
+
+Domain services:
+- CrackTimeEstimator.estimate_all(entropy) -> list[CrackEstimate]
+    4 scenarios: online_throttled(100/s), online_unthrottled(10k/s),
+    offline_slow(1M/s — bcrypt), offline_fast(1T/s — MD5 GPU)
+- StrengthPolicy.evaluate(entropy) -> StrengthLevel
+    enum: VERY_WEAK(<28) WEAK(<36) FAIR(<60) STRONG(<128) PARANOID(128+)
+
+Repository interface (lives in domain!):
+- IAnalysisRepository (ABC):
+    async save(analysis: PasswordAnalysis) -> None
+    async get_recent(limit: int) -> list[PasswordAnalysis]

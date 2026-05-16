@@ -1,0 +1,83 @@
+:root {
+    --bs-body-bg: #0f0f13;
+    --bs-body-color: #e2e8f0;
+    --bs-border-color: #2d2d3d;
+    --bs-font-monospace: 'JetBrains Mono', monospace;
+    --bs-purple: #8b5cf6;
+}
+
+body {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+}
+
+.font-monospace {
+    font-family: 'JetBrains Mono', monospace !important;
+}
+
+.card.bg-dark {
+    background-color: #1a1a24 !important;
+    border-color: var(--bs-border-color);
+}
+
+.btn-purple {
+    background: #8b5cf6 !important;
+    border: none !important;
+    transition: all 0.3s ease;
+}
+
+.btn-purple:hover {
+    background: #7c3aed !important;
+    transform: translateY(-1px);
+}
+
+.entropy-display {
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #8b5cf6, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.text-purple {
+    color: #8b5cf6 !important;
+}
+
+.bg-purple {
+    background-color: #8b5cf6 !important;
+}
+
+.progress-bar {
+    transition: width 0.5s ease;
+}
+
+.card {
+    transition: transform 0.2s ease;
+}
+
+.badge.rounded-pill {
+    padding: 0.5rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.list-group-item {
+    border-color: var(--bs-border-color);
+}
+
+.form-range::-webkit-slider-thumb {
+    background: #8b5cf6;
+}
+
+.form-check-input:checked {
+    background-color: #8b5cf6;
+    border-color: #8b5cf6;
+}
+
+.table-dark {
+    background-color: #1a1a24;
+}
+
+.table-dark td, .table-dark th {
+    border-color: var(--bs-border-color);
+}

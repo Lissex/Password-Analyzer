@@ -1,0 +1,24 @@
+Implement application layer in backend/src/application/.
+
+AnalyzePasswordUseCase:
+  __init__(self, estimator: CrackTimeEstimator, policy: StrengthPolicy,
+           repo: IAnalysisRepository)  # depends on interface, not implementation
+  async execute(raw_password: str) -> AnalyzeResponse:
+    1. Build CharacterPool.from_password(raw_password)
+    2. Calculate Entropy
+    3. Get strength via policy
+    4. Estimate crack times
+    5. Build PasswordAnalysis entity with uuid4() + datetime.now(UTC)
+    6. await repo.save(entity)
+    7. Return AnalyzeResponse DTO
+
+GeneratePasswordUseCase:
+  __init__(self, policy: StrengthPolicy, repo: IAnalysisRepository)
+  async execute(length, uppercase, digits, symbols) -> GenerateResponse:
+    1. Build charset from flags using secrets.choice()
+    2. Generate password
+    3. Run same analysis pipeline
+    4. Save to repo
+    5. Return GenerateResponse with password + full analysis
+
+DTOs are plain dataclasses — no Pydantic, no SQLAlchemy.

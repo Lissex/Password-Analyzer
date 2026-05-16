@@ -1,0 +1,22 @@
+Write README.md with:
+
+## Quick start
+docker compose up --build
+# app: http://localhost:8000
+# postgres: localhost:5432
+
+## Development (hot reload)
+docker compose up --build
+# override file is picked up automatically
+
+## Run migrations manually
+docker compose exec backend alembic upgrade head
+
+## Generate new migration
+docker compose exec backend alembic revision --autogenerate -m "description"
+
+## Run tests
+docker compose exec backend uv run pytest tests/
+
+## Architecture
+Short description of 4 layers, dependency rule, why domain has no external deps.

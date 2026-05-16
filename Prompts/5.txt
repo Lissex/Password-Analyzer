@@ -1,0 +1,27 @@
+Implement presentation layer and wire dependencies.
+
+1. presentation/dependencies.py:
+   - get_db() from infrastructure/database/connection.py (re-export)
+   - get_analysis_repo(db: AsyncSession = Depends(get_db))
+       -> PostgresAnalysisRepository(db)
+   - get_analyze_use_case(repo = Depends(get_analysis_repo))
+       -> AnalyzePasswordUseCase(CrackTimeEstimator(), StrengthPolicy(), repo)
+   - get_generate_use_case(repo = Depends(get_analysis_repo))
+       -> GeneratePasswordUseCase(StrengthPolicy(), repo)
+
+2. Pydantic schemas (separate from domain DTOs!):
+   AnalyzeRequest: password: str (min_length=1, max_length=512)
+   GenerateRequest: length: int (ge=8, le=128), uppercase: bool = True,
+                    digits: bool = True, symbols: bool = False
+   AnalyzeResponse schema mirrors AnalyzeResponse DTO
+
+3. Routers:
+   POST /api/v1/analyze  -> use_case.execute(body.password)
+   POST /api/v1/generate -> use_case.execute(...)
+   GET  /api/v1/history  -> repo.get_recent(limit=20)  # бонус-эндпоинт
+
+4. main.py:
+   - lifespan: on startup run alembic upgrade head programmatically
+   - CORS allow_origins=["*"]
+   - Mount StaticFiles from ../frontend at "/"
+   - Include routers with prefix /api/v1

@@ -1,0 +1,34 @@
+Create a FastAPI project called password-analyzer with clean architecture + DDD.
+Folder layout:
+  backend/src/{domain,application,infrastructure,presentation}/
+  backend/alembic/
+  frontend/
+
+Tooling:
+- Python 3.12, uv, pyproject.toml
+- Dependencies: fastapi, uvicorn, sqlalchemy[asyncio], asyncpg,
+  alembic, pydantic, pydantic-settings, python-dotenv
+
+Create these Docker files:
+
+1. backend/Dockerfile:
+   - base image python:3.12-slim
+   - install uv, copy pyproject.toml, run uv sync
+   - CMD: uvicorn main:app --host 0.0.0.0 --port 8000
+
+2. docker-compose.yml with two services:
+   - db: postgres:16-alpine, volume postgres_data, env POSTGRES_*/,
+     healthcheck with pg_isready
+   - backend: build ./backend, depends_on db with condition healthy,
+     env DATABASE_URL, ports 8000:8000
+   - network: app-network
+
+3. docker-compose.override.yml (dev only):
+   - backend: volumes ./backend:/app for hot reload,
+     command with --reload flag
+
+4. .env.example:
+   POSTGRES_USER=postgres
+   POSTGRES_PASSWORD=postgres
+   POSTGRES_DB=password_analyzer
+   DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/password_analyzer
