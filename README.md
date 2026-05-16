@@ -1,53 +1,43 @@
 # 🔐 Password Analyzer
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.12-blue.svg" alt="Python 3.12">
-  <img src="https://img.shields.io/badge/FastAPI-0.115+-green.svg" alt="FastAPI">
-  <img src="https://img.shields.io/badge/PostgreSQL-16-blue.svg" alt="PostgreSQL">
-  <img src="https://img.shields.io/badge/Docker-✔-blue.svg" alt="Docker">
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License">
+  <img src="https://img.shields.io/badge/Python-3.12-blue.svg" />
+  <img src="https://img.shields.io/badge/FastAPI-0.115+-green.svg" />
+  <img src="https://img.shields.io/badge/PostgreSQL-16-blue.svg" />
+  <img src="https://img.shields.io/badge/Docker-ready-blue.svg" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
 </p>
 
 <p align="center">
-  <strong>Современный анализатор стойкости паролей на основе Clean Architecture и DDD</strong>
+  <b>Анализатор стойкости паролей (Clean Architecture + DDD)</b>
 </p>
 
 ---
 
 ## 📋 О проекте
 
-**Password Analyzer** — это веб-приложение для анализа стойкости паролей с расчётом энтропии и времени взлома в различных сценариях атак.
-
-Проект построен на принципах:
-
-* 🧱 Clean Architecture
-* 🧠 Domain-Driven Design (DDD)
-* ⚡ Асинхронной архитектуры FastAPI
+Password Analyzer — сервис для оценки стойкости паролей на основе энтропии и моделирования атак.
 
 ---
 
 ## ✨ Возможности
 
-* 🎯 Расчёт энтропии пароля (бит)
-* ⏱ Оценка времени взлома:
-
-  * Онлайн атака (100 попыток/сек)
-  * Онлайн без ограничений (10k/сек)
-  * Офлайн bcrypt (1M/сек)
-  * GPU MD5 (1T/сек)
-* 💪 5 уровней стойкости пароля
-* 🎲 Генерация криптостойких паролей
-* 📊 Оценка "процентильной силы" пароля
-* 🎮 Сценарии для RTX 4090
-* 📝 История анализов (PostgreSQL)
-* 🎨 UI на Bootstrap 5.3 с тёмной темой
-* 🐳 Полная Docker-поддержка
+- Энтропия пароля (бит)
+- Моделирование времени взлома:
+  - online 100 попыток/сек
+  - online 10k попыток/сек
+  - offline bcrypt
+  - GPU brute force
+- 5 уровней стойкости
+- Генерация паролей
+- История анализов (PostgreSQL)
+- Docker запуск
 
 ---
 
-## 🚀 Быстрый старт
+## 🚀 Запуск
 
-### 🔧 Docker (рекомендуется)
+### Docker
 
 ```bash
 git clone https://github.com/your-username/password-analyzer.git
@@ -58,27 +48,26 @@ cp .env.example .env
 docker compose up --build
 ```
 
-После запуска:
+Открыть:
 
-[http://localhost:8000](http://localhost:8000)
-
----
-
-### 💻 Локальный запуск
-
-```bash
-cd backend
-
-uv sync
-
-uv run alembic upgrade head
-
-uv run uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+http://127.0.0.1:8000/
 ```
 
 ---
 
-## ⚙️ Конфигурация (.env)
+### Локально
+
+```bash
+cd backend
+uv sync
+uv run alembic upgrade head
+uv run uvicorn main:app --reload
+```
+
+---
+
+## ⚙️ .env
 
 ```env
 POSTGRES_USER=postgres
@@ -88,38 +77,43 @@ DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/password_analyzer
 
 APP_NAME=Password Analyzer
 DEBUG=true
-SECRET_KEY=your-secret-key-here-change-in-production
+SECRET_KEY=change-me
 ```
 
 ---
 
-## 🏗️ Архитектура
+## 🧠 Архитектура
 
-Presentation Layer (FastAPI, Schemas)
-↓
-Application Layer (Use Cases, DTO)
-↓
-Domain Layer (Entities, Value Objects, Rules)
-↓
-Infrastructure Layer (DB, Repositories)
+```text
+Presentation (FastAPI)
+        ↓
+Application (Use Cases)
+        ↓
+Domain (Business Logic)
+        ↓
+Infrastructure (DB, Repos)
+```
 
 ---
 
-## 📁 Структура проекта
+## 📁 Структура
 
+```text
 backend/
-├── src/
-│   ├── domain/
-│   ├── application/
-│   ├── infrastructure/
-│   └── presentation/
-├── alembic/
-├── tests/
-├── main.py
+  src/
+    domain/
+    application/
+    infrastructure/
+    presentation/
+  alembic/
+  tests/
+  main.py
+
 frontend/
-├── index.html
-├── style.css
-└── app.js
+  index.html
+  style.css
+  app.js
+```
 
 ---
 
@@ -127,84 +121,62 @@ frontend/
 
 ### Docker
 
+```bash
 docker compose up --build
 docker compose up -d
 docker compose down
 docker compose logs -f
+```
 
-### БД
+### DB
 
+```bash
 docker compose exec backend alembic upgrade head
 docker compose exec backend alembic revision --autogenerate -m "msg"
-docker compose exec backend alembic downgrade -1
-
-### Тесты
-
-docker compose exec backend pytest
-docker compose exec backend pytest --cov=src
+```
 
 ---
 
 ## 📡 API
 
+```text
 POST /api/v1/analyze
 POST /api/v1/generate
-GET /api/v1/history
-GET /health
+GET  /api/v1/history
+```
 
 ---
 
-## 🧪 Энтропия
+## 🔐 Стойкость паролей
 
-Entropy = length × log₂(pool_size)
-
----
-
-## 🔐 Уровни стойкости
-
-Очень слабый < 28 бит
-Слабый 28–36 бит
-Средний 36–60 бит
-Сильный 60–128 бит
-Параноидальный 128+ бит
+| Уровень | Биты | Оценка |
+|--------|------|--------|
+| weak | <28 | мгновенно |
+| medium | 28-60 | минуты-дни |
+| strong | 60-128 | годы |
+| paranoid | 128+ | практически невозможно |
 
 ---
 
-## 🛠️ Технологии
+## 🛠 Технологии
 
-FastAPI, Python 3.12, PostgreSQL 16, SQLAlchemy async, Docker, Bootstrap 5.3, pytest
-
----
-
-## 🔒 Безопасность
-
-* Нет хранения паролей
-* secrets для генерации
-* env конфигурация
-* CORS
-* валидация входных данных
+- FastAPI
+- Python 3.12
+- PostgreSQL
+- SQLAlchemy async
+- Docker
 
 ---
 
-## 🤝 Вклад
+## ⚠️ Важно
 
-Fork → Branch → Commit → Push → PR
-
----
-
-## 📄 Лицензия
-
-MIT
-
----
-
-## 👨‍💻 Автор
-
-Your Name
-GitHub: [https://github.com/your-username](https://github.com/your-username)
+```
+Приложение работает только на:
+http://127.0.0.1:8000/
+```
 
 ---
 
 ## ⭐ Поддержка
 
-Поставь звезду ⭐
+Если полезно — поставь ⭐
